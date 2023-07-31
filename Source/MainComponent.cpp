@@ -20,9 +20,11 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
     addAndMakeVisible(playButton);
+    addAndMakeVisible(stopButton);
     addAndMakeVisible(volSlider);
 
     playButton.addListener(this);
+    stopButton.addListener(this);
 }
 
 MainComponent::~MainComponent()
@@ -78,7 +80,8 @@ void MainComponent::resized()
     // update their positions.
     double rowH = getHeight()/5;
     playButton.setBounds(0, 0, getWidth(), rowH);
-    volSlider.setBounds(0,  rowH, getWidth(), rowH);
+    stopButton.setBounds(0, rowH, getWidth(), rowH);
+    volSlider.setBounds(0,  rowH * 2, getWidth(), rowH);
 }
 
 void MainComponent::buttonClicked (juce::Button* button)
