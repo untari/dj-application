@@ -21,6 +21,8 @@ MainComponent::MainComponent()
     }
     addAndMakeVisible(playButton);
     addAndMakeVisible(volSlider);
+
+    playButton.addListener(this);
 }
 
 MainComponent::~MainComponent()
@@ -77,4 +79,9 @@ void MainComponent::resized()
     double rowH = getHeight()/5;
     playButton.setBounds(0, 0, getWidth(), rowH);
     volSlider.setBounds(0,  rowH, getWidth(), rowH);
+}
+
+void MainComponent::buttonClicked (juce::Button* button)
+{
+    std::cout << "button was clicked" << std::endl;
 }
