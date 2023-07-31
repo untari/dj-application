@@ -8,7 +8,8 @@
     your controls and content.
 */
 class MainComponent  : public juce::AudioAppComponent,
-                       public juce::Button::Listener
+                       public juce::Button::Listener,
+                       public juce::Slider::Listener
 {
 public:
     //==============================================================================
@@ -25,7 +26,9 @@ public:
     void resized() override;
 
     //implement button listener
-    void buttonClicked(juce::Button *);
+    void buttonClicked(juce::Button *) override;
+    //implement slider listener
+    void sliderValueChanged(juce::Slider *slider) override;
 
 private:
     //==============================================================================
