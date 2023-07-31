@@ -86,5 +86,13 @@ void MainComponent::resized()
 
 void MainComponent::buttonClicked (juce::Button* button)
 {
-    std::cout << "button was clicked" << std::endl;
+    if(button == &playButton)
+    {
+        std::cout << "button was clicked" << std::endl;
+    }
+    if(button == &stopButton)
+    {
+        std::cout << "stop was clicked" << std::endl;
+    }
+    
 }
