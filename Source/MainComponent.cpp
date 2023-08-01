@@ -69,7 +69,7 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
         //generate random number
         // double sample = rand.nextDouble() * 0.25;
 
-        double sample = fmod(phase, 0.2);
+        double sample = sin(phase) * 0.1;
         leftChan[i] = sample;
         rightChan[i] = sample;
 
@@ -126,7 +126,7 @@ void MainComponent::sliderValueChanged (juce::Slider *slider)
     if(slider == &volSlider)
     {
         // std::cout << "vol slider moved" << slider->getValue() << std::endl;
-        dphase = volSlider.getValue() * 0.001;
+        dphase = volSlider.getValue() * 0.01;
     }
 
 }
