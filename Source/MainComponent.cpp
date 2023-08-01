@@ -54,7 +54,21 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
 
     // Right now we are not producing any data, in which case we need to clear the buffer
     // (to prevent the output of random noise)
-    bufferToFill.clearActiveBufferRegion();
+
+    // get access to buffer
+    auto* leftChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+    auto* rightChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+    
+    //fill up with samples using for loop
+    for(auto i=0; i < bufferToFill.numSamples; ++i)
+    {
+        //generate random number
+        double sample = rand.nextDouble() * 0.25;
+        leftChan[i] = sample;
+        rightChan[i] = sample;
+
+    }
+    // bufferToFill.clearActiveBufferRegion();
 }
 
 void MainComponent::releaseResources()
