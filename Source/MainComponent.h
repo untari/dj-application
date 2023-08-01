@@ -39,7 +39,10 @@ private:
     juce::Slider volSlider;
 
     juce::Random rand;
+
     double phase;
+    double dphase;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

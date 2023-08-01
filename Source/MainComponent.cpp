@@ -46,6 +46,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     // For more details, see the help for AudioProcessor::prepareToPlay()
     
     phase = 0.0;
+    dphase = 0.0001;
 
 }
 
@@ -73,7 +74,7 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
         rightChan[i] = sample;
 
         // when generate a sample, increase the phase 
-        phase += 0.05;
+        phase += dphase;
 
     }
     // bufferToFill.clearActiveBufferRegion();
@@ -124,6 +125,8 @@ void MainComponent::sliderValueChanged (juce::Slider *slider)
 {
     if(slider == &volSlider)
     {
-        std::cout << "vol slider moved" << slider->getValue() << std::endl;
+        // std::cout << "vol slider moved" << slider->getValue() << std::endl;
+        dphase = volSlider.getValue() * 0.001;
     }
+
 }
