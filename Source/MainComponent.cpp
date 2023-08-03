@@ -23,11 +23,13 @@ MainComponent::MainComponent()
     addAndMakeVisible(stopButton);
     addAndMakeVisible(loadButton);
     addAndMakeVisible(volSlider);
+    addAndMakeVisible(speedSlider);
 
     playButton.addListener(this);
     stopButton.addListener(this);
     loadButton.addListener(this);
     volSlider.addListener(this);
+    speedSlider.addListener(this);
 
     volSlider.setRange(0.0, 1.0);
 }
@@ -54,26 +56,18 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
     // register all the formats of the basic audio format
     formatManager.registerBasicFormats();
-    // // hard cors an audio file
-    // juce::URL audioURL(juce::File("/home/bichito/tracks/aon_inspired.mp3"));
-
-    // auto* reader = formatManager.createReaderFor(juce::File("/home/bichito/tracks/aon_inspired.mp3"));
-    // if (reader != nullptr) // good file!
-    // {      
-    //     std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader,
-    //         true));
-    //     transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-    //     readerSource.reset(newSource.release());
-    //     transportSource.start();          
-    // }
     
     transportSource.prepareToPlay(
+        samplesPerBlockExpected, 
+        sampleRate);
+    resampleSource.prepareToPlay(
         samplesPerBlockExpected, 
         sampleRate);
 }
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    transportSource.getNextAudioBlock(bufferToFill);
+    // transportSource.getNextAudioBlock(bufferToFill);
+    resampleSource.getNextAudioBlock(bufferToFill);
 }
 
 // void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
@@ -133,7 +127,8 @@ void MainComponent::resized()
     playButton.setBounds(0, 0, getWidth(), rowH);
     stopButton.setBounds(0, rowH, getWidth(), rowH);
     volSlider.setBounds(0,  rowH * 2, getWidth(), rowH);
-    loadButton.setBounds(0,  rowH * 3, getWidth(), rowH);
+    speedSlider.setBounds(0,  rowH * 3, getWidth(), rowH);
+    loadButton.setBounds(0,  rowH * 4, getWidth(), rowH);
 }
 
 
@@ -166,7 +161,10 @@ void MainComponent::sliderValueChanged (juce::Slider *slider)
     {
         transportSource.setGain(slider->getValue());
     }
-
+    if(slider == &speedSlider)
+    {
+        resampleSource.setResamplingRatio(slider->getValue());
+    }
 }
 
 void MainComponent::loadURL(juce::URL audioURL)

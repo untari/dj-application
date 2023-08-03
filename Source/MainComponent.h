@@ -38,7 +38,7 @@ private:
     juce::TextButton stopButton{"STOP"};
     juce::TextButton loadButton{"LOAD"};
     juce::Slider volSlider;
-
+    juce::Slider speedSlider;
     juce::Random rand;
 
     double phase;
@@ -50,6 +50,8 @@ private:
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
 
     juce::AudioTransportSource transportSource;
+
+    juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
 
     void loadURL(juce::URL audioURL);
 
