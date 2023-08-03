@@ -48,37 +48,76 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     phase = 0.0;
     dphase = 0.0001;
 
-}
+    // register all the formats of the basic audio format
+    formatManager.registerBasicFormats();
+    // hard cors an audio file
+    juce::URL audioURL(juce::File("/home/bichito/tracks/aon_inspired.mp3"));
+    // std::cout << audioURL.getParentURL() << std::endl;
+    // std::cout << audioURL.getFileName() << std::endl;
+    // audioURL.launchInDefaultBrowser();
+    if (audioURL.isWellFormed())
+        std::cout << "well formed" << std::endl;
+    else
+        std::cout << "not well" << std::endl;
+    // get the URL and unpack it. the URL is converted into inputStream and then
+    // is passed to the AudioFormartManager then create us a reader
+    // auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
+    // auto* reader = formatManager.createReaderFor(audioURL.createInputStream(
+    //                                                     juce::URL::InputStreamOptions(juce::URL::ParameterHandling::inAddress)
+    //                                                         .withConnectionTimeoutMs (1000)
+    //                                                         .withNumRedirectsToFollow (0)));
 
+    auto* reader = formatManager.createReaderFor(juce::File("/home/bichito/tracks/aon_inspired.mp3"));
+    if (reader != nullptr) // good file!
+    {      
+        std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader,
+            true));
+        transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+        readerSource.reset(newSource.release());
+        transportSource.start();          
+    }
+    else
+    {
+        std::cout << "File could not be found!" << std::endl;
+    }
+    transportSource.prepareToPlay(
+        samplesPerBlockExpected, 
+        sampleRate);
+}
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    // Your audio-processing code goes here!
-
-    // For more details, see the help for AudioProcessor::getNextAudioBlock()
-
-    // Right now we are not producing any data, in which case we need to clear the buffer
-    // (to prevent the output of random noise)
-
-    // get access to buffer
-    auto* leftChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-    auto* rightChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-    
-    //fill up with samples using for loop
-    for(auto i=0; i < bufferToFill.numSamples; ++i)
-    {
-        //generate random number
-        // double sample = rand.nextDouble() * 0.25;
-
-        double sample = sin(phase) * 0.1;
-        leftChan[i] = sample;
-        rightChan[i] = sample;
-
-        // when generate a sample, increase the phase 
-        phase += dphase;
-
-    }
-    // bufferToFill.clearActiveBufferRegion();
+    transportSource.getNextAudioBlock(bufferToFill);
 }
+
+// void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
+// {
+//     // Your audio-processing code goes here!
+
+//     // For more details, see the help for AudioProcessor::getNextAudioBlock()
+
+//     // Right now we are not producing any data, in which case we need to clear the buffer
+//     // (to prevent the output of random noise)
+
+//     // get access to buffer
+//     auto* leftChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+//     auto* rightChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+    
+//     //fill up with samples using for loop
+//     for(auto i=0; i < bufferToFill.numSamples; ++i)
+//     {
+//         //generate random number
+//         // double sample = rand.nextDouble() * 0.25;
+
+//         double sample = sin(phase) * 0.1;
+//         leftChan[i] = sample;
+//         rightChan[i] = sample;
+
+//         // when generate a sample, increase the phase 
+//         phase += dphase;
+
+//     }
+//     // bufferToFill.clearActiveBufferRegion();
+// }
 
 void MainComponent::releaseResources()
 {
@@ -86,6 +125,7 @@ void MainComponent::releaseResources()
     // restarted due to a setting change.
 
     // For more details, see the help for AudioProcessor::releaseResources()
+    transportSource.releaseResources();
 }
 
 //==============================================================================
@@ -130,3 +170,8 @@ void MainComponent::sliderValueChanged (juce::Slider *slider)
     }
 
 }
+
+// void MainComponent::loadURL(URL audioURL)
+// {
+
+// }

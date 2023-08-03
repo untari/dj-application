@@ -43,6 +43,14 @@ private:
     double phase;
     double dphase;
 
+    // implement audio file playback
+    juce::AudioFormatManager formatManager;
+    // standard unique pointer
+    std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
+
+    juce::AudioTransportSource transportSource;
+
+    // void loadURL(URL audioURL);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
