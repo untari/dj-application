@@ -36,6 +36,7 @@ private:
         
     juce::TextButton playButton{"PLAY"};
     juce::TextButton stopButton{"STOP"};
+    juce::TextButton loadButton{"LOAD"};
     juce::Slider volSlider;
 
     juce::Random rand;
@@ -50,7 +51,7 @@ private:
 
     juce::AudioTransportSource transportSource;
 
-    // void loadURL(URL audioURL);
+    void loadURL(juce::URL audioURL);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

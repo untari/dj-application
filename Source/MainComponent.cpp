@@ -21,10 +21,12 @@ MainComponent::MainComponent()
     }
     addAndMakeVisible(playButton);
     addAndMakeVisible(stopButton);
+    addAndMakeVisible(loadButton);
     addAndMakeVisible(volSlider);
 
     playButton.addListener(this);
     stopButton.addListener(this);
+    loadButton.addListener(this);
     volSlider.addListener(this);
 }
 
@@ -50,36 +52,19 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
     // register all the formats of the basic audio format
     formatManager.registerBasicFormats();
-    // hard cors an audio file
-    juce::URL audioURL(juce::File("/home/bichito/tracks/aon_inspired.mp3"));
-    // std::cout << audioURL.getParentURL() << std::endl;
-    // std::cout << audioURL.getFileName() << std::endl;
-    // audioURL.launchInDefaultBrowser();
-    if (audioURL.isWellFormed())
-        std::cout << "well formed" << std::endl;
-    else
-        std::cout << "not well" << std::endl;
-    // get the URL and unpack it. the URL is converted into inputStream and then
-    // is passed to the AudioFormartManager then create us a reader
-    // auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
-    // auto* reader = formatManager.createReaderFor(audioURL.createInputStream(
-    //                                                     juce::URL::InputStreamOptions(juce::URL::ParameterHandling::inAddress)
-    //                                                         .withConnectionTimeoutMs (1000)
-    //                                                         .withNumRedirectsToFollow (0)));
+    // // hard cors an audio file
+    // juce::URL audioURL(juce::File("/home/bichito/tracks/aon_inspired.mp3"));
 
-    auto* reader = formatManager.createReaderFor(juce::File("/home/bichito/tracks/aon_inspired.mp3"));
-    if (reader != nullptr) // good file!
-    {      
-        std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader,
-            true));
-        transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-        readerSource.reset(newSource.release());
-        transportSource.start();          
-    }
-    else
-    {
-        std::cout << "File could not be found!" << std::endl;
-    }
+    // auto* reader = formatManager.createReaderFor(juce::File("/home/bichito/tracks/aon_inspired.mp3"));
+    // if (reader != nullptr) // good file!
+    // {      
+    //     std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader,
+    //         true));
+    //     transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+    //     readerSource.reset(newSource.release());
+    //     transportSource.start();          
+    // }
+    
     transportSource.prepareToPlay(
         samplesPerBlockExpected, 
         sampleRate);
@@ -146,6 +131,7 @@ void MainComponent::resized()
     playButton.setBounds(0, 0, getWidth(), rowH);
     stopButton.setBounds(0, rowH, getWidth(), rowH);
     volSlider.setBounds(0,  rowH * 2, getWidth(), rowH);
+    loadButton.setBounds(0,  rowH * 3, getWidth(), rowH);
 }
 
 
@@ -159,6 +145,15 @@ void MainComponent::buttonClicked (juce::Button* button)
     {
         std::cout << "stop was clicked" << std::endl;
     }
+    if(button == &loadButton)
+    {
+        // to open file browser
+        juce::FileChooser chooser{"select a file.."};
+        if(chooser.browseForFileToOpen())
+        {
+            loadURL(juce::URL{chooser.getResult()});
+        }
+    }
 }
 
 void MainComponent::sliderValueChanged (juce::Slider *slider)
@@ -171,7 +166,15 @@ void MainComponent::sliderValueChanged (juce::Slider *slider)
 
 }
 
-// void MainComponent::loadURL(URL audioURL)
-// {
-
-// }
+void MainComponent::loadURL(juce::URL audioURL)
+{
+    auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
+    if (reader != nullptr) // good file!
+    {      
+        std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader,
+            true));
+        transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+        readerSource.reset(newSource.release());
+        transportSource.start();   
+    }
+}
