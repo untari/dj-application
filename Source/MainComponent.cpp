@@ -28,6 +28,8 @@ MainComponent::MainComponent()
     stopButton.addListener(this);
     loadButton.addListener(this);
     volSlider.addListener(this);
+
+    volSlider.setRange(0.0, 1.0);
 }
 
 MainComponent::~MainComponent()
@@ -162,8 +164,7 @@ void MainComponent::sliderValueChanged (juce::Slider *slider)
 {
     if(slider == &volSlider)
     {
-        // std::cout << "vol slider moved" << slider->getValue() << std::endl;
-        dphase = volSlider.getValue() * 0.01;
+        transportSource.setGain(slider->getValue());
     }
 
 }
