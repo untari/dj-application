@@ -140,10 +140,12 @@ void MainComponent::buttonClicked (juce::Button* button)
     if(button == &playButton)
     {
         std::cout << "button was clicked" << std::endl;
+        transportSource.start(); 
     }
     if(button == &stopButton)
     {
         std::cout << "stop was clicked" << std::endl;
+        transportSource.stop(); 
     }
     if(button == &loadButton)
     {
@@ -175,6 +177,6 @@ void MainComponent::loadURL(juce::URL audioURL)
             true));
         transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
         readerSource.reset(newSource.release());
-        transportSource.start();   
+          
     }
 }
