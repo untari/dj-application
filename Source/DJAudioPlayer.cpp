@@ -22,7 +22,7 @@ DJAudioPlayer::~DJAudioPlayer()
 void DJAudioPlayer::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
   formatManager.registerBasicFormats();
-  transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate)
+  transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 void DJAudioPlayer::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
@@ -60,9 +60,9 @@ void DJAudioPlayer::setPosition(double posInSecs)
 
 void DJAudioPlayer::start()
 {
-
+  transportSource.start();
 }
 void DJAudioPlayer::stop()
 {
-  
+  transportSource.stop();
 }
