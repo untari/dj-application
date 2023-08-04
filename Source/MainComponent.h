@@ -1,7 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-
+#include "DJAudioPlayer.h"
 //==============================================================================
 /*
     This component lives inside our window, and this is where you should put all
@@ -50,10 +50,11 @@ private:
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
 
     juce::AudioTransportSource transportSource;
-
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
 
     void loadURL(juce::URL audioURL);
+
+    DJAudioPlayer player1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
