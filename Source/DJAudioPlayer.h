@@ -27,6 +27,7 @@ class DJAudioPlayer : public juce::AudioSource
     void setGain(double gain);
     void setSpeed(double ratio);
     void setPosition(double posInSecs);
+    void setPositionRelative(double pos);
 
     void start();
     void stop();

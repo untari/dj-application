@@ -16,7 +16,7 @@ DJAudioPlayer::DJAudioPlayer()
 }
 DJAudioPlayer::~DJAudioPlayer()
 {
-
+ 
 }
 //==============================================================================
 void DJAudioPlayer::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
@@ -71,7 +71,18 @@ void DJAudioPlayer::setSpeed(double ratio)
 }
 void DJAudioPlayer::setPosition(double posInSecs)
 {
+  transportSource.setPosition(posInSecs);
+}
 
+void DJAudioPlayer::setPositionRelative(double pos)
+{
+  if(pos < 0 || pos > 1.0)
+  {
+    std::cout << "DJAudioPlayer::setPositionRelative pos should be between 0 and 100" << std::endl;
+  }else{
+      double posInSecs = transportSource.getLengthInSeconds() * pos;
+      setPosition(posInSecs);
+  }
 }
 
 void DJAudioPlayer::start()
