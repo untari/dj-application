@@ -34,7 +34,14 @@ void DJAudioPlayer::releaseResources(){
 // function that allow us to control it
 void DJAudioPlayer::loadURL(juce::URL audioURL)
 {
-
+    auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
+    if (reader != nullptr) // good file!
+    {      
+        std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader,
+            true));
+        transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+        readerSource.reset(newSource.release());         
+    }
 }
 void DJAudioPlayer::setGain(double gain)
 {
