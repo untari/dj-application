@@ -32,7 +32,9 @@ MainComponent::MainComponent()
     volSlider.addListener(this);
     speedSlider.addListener(this);
     posSlider.addListener(this);
+
     volSlider.setRange(0.0, 1.0);
+    posSlider.setRange(0.0, 1.0);
 }
 
 MainComponent::~MainComponent()
@@ -159,6 +161,6 @@ void MainComponent::sliderValueChanged (juce::Slider *slider)
     }
     if(slider == &posSlider)
     {
-        player1.setSpeed(slider->getValue());
+        player1.setPosition(slider->getValue());
     }
 }

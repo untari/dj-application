@@ -41,6 +41,7 @@ private:
     juce::Slider volSlider;
     juce::Slider speedSlider;
     juce::Slider posSlider;
+    
     DJAudioPlayer player1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
