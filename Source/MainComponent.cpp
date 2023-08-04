@@ -50,9 +50,6 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     // but be careful - it will be called on the audio thread, not the GUI thread.
 
     // For more details, see the help for AudioProcessor::prepareToPlay()
-    
-    phase = 0.0;
-    dphase = 0.0001;
     player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
@@ -128,12 +125,12 @@ void MainComponent::buttonClicked (juce::Button* button)
     if(button == &playButton)
     {
         std::cout << "button was clicked" << std::endl;
-        transportSource.start(); 
+        player1.start(); 
     }
     if(button == &stopButton)
     {
         std::cout << "stop was clicked" << std::endl;
-        transportSource.stop(); 
+        player1.stop(); 
     }
     if(button == &loadButton)
     {
@@ -141,7 +138,7 @@ void MainComponent::buttonClicked (juce::Button* button)
         juce::FileChooser chooser{"select a file.."};
         if(chooser.browseForFileToOpen())
         {
-            loadURL(juce::URL{chooser.getResult()});
+            player1.loadURL(juce::URL{chooser.getResult()});
         }
     }
 }
@@ -150,23 +147,10 @@ void MainComponent::sliderValueChanged (juce::Slider *slider)
 {
     if(slider == &volSlider)
     {
-        transportSource.setGain(slider->getValue());
+
     }
     if(slider == &speedSlider)
     {
-        resampleSource.setResamplingRatio(slider->getValue());
-    }
-}
 
-void MainComponent::loadURL(juce::URL audioURL)
-{
-    auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
-    if (reader != nullptr) // good file!
-    {      
-        std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader,
-            true));
-        transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-        readerSource.reset(newSource.release());
-          
     }
 }
