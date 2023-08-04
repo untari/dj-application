@@ -53,21 +53,12 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     
     phase = 0.0;
     dphase = 0.0001;
-
-    // register all the formats of the basic audio format
-    formatManager.registerBasicFormats();
-    
-    transportSource.prepareToPlay(
-        samplesPerBlockExpected, 
-        sampleRate);
-    resampleSource.prepareToPlay(
-        samplesPerBlockExpected, 
-        sampleRate);
+    player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
     // transportSource.getNextAudioBlock(bufferToFill);
-    resampleSource.getNextAudioBlock(bufferToFill);
+    player1.getNextAudioBlock(bufferToFill);
 }
 
 // void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
@@ -106,7 +97,7 @@ void MainComponent::releaseResources()
     // restarted due to a setting change.
 
     // For more details, see the help for AudioProcessor::releaseResources()
-    transportSource.releaseResources();
+    player1.releaseResources();
 }
 
 //==============================================================================
