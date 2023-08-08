@@ -36,7 +36,9 @@ private:
     // Your private member variables go here...
     
     DJAudioPlayer player1;
-    DeckGUI deckDUI1;
-    DeckGUI deckDUI2;
+    DeckGUI deckDUI1{&player1};
+
+    DJAudioPlayer player2;
+    DeckGUI deckDUI2{&player2};
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
