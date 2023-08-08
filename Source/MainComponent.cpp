@@ -19,22 +19,9 @@ MainComponent::MainComponent()
         // Specify the number of input and output channels that we want to open
         setAudioChannels (0, 2);
     }
-    addAndMakeVisible(playButton);
-    addAndMakeVisible(stopButton);
-    addAndMakeVisible(loadButton);
-    addAndMakeVisible(volSlider);
-    addAndMakeVisible(speedSlider);
-    addAndMakeVisible(posSlider);
 
-    playButton.addListener(this);
-    stopButton.addListener(this);
-    loadButton.addListener(this);
-    volSlider.addListener(this);
-    speedSlider.addListener(this);
-    posSlider.addListener(this);
-
-    volSlider.setRange(0.0, 1.0);
-    posSlider.setRange(0.0, 1.0);
+    addAndMakeVisible(deckDUI1);
+    addAndMakeVisible(deckDUI2);
 }
 
 MainComponent::~MainComponent()
@@ -114,53 +101,46 @@ void MainComponent::resized()
     // This is called when the MainContentComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.
-    double rowH = getHeight()/6;
-    playButton.setBounds(0, 0, getWidth(), rowH);
-    stopButton.setBounds(0, rowH, getWidth(), rowH);
-
-    volSlider.setBounds(0,  rowH * 2, getWidth(), rowH);
-    speedSlider.setBounds(0,  rowH * 3, getWidth(), rowH);
-    posSlider.setBounds(0,  rowH * 4, getWidth(), rowH);
-
-    loadButton.setBounds(0,  rowH * 5, getWidth(), rowH);
+    deckDUI1.setBounds(0, 0, getWidth()/2, getHeight());
+    deckDUI2.setBounds(getWidth()/2, 0, getWidth()/2, getHeight());
 }
 
 
 void MainComponent::buttonClicked (juce::Button* button)
 {
-    if(button == &playButton)
-    {
-        std::cout << "button was clicked" << std::endl;
-        player1.start(); 
-    }
-    if(button == &stopButton)
-    {
-        std::cout << "stop was clicked" << std::endl;
-        player1.stop(); 
-    }
-    if(button == &loadButton)
-    {
-        // to open file browser
-        juce::FileChooser chooser{"select a file.."};
-        if(chooser.browseForFileToOpen())
-        {
-            player1.loadURL(juce::URL{chooser.getResult()});
-        }
-    }
+    // if(button == &playButton)
+    // {
+    //     std::cout << "button was clicked" << std::endl;
+    //     player1.start(); 
+    // }
+    // if(button == &stopButton)
+    // {
+    //     std::cout << "stop was clicked" << std::endl;
+    //     player1.stop(); 
+    // }
+    // if(button == &loadButton)
+    // {
+    //     // to open file browser
+    //     juce::FileChooser chooser{"select a file.."};
+    //     if(chooser.browseForFileToOpen())
+    //     {
+    //         player1.loadURL(juce::URL{chooser.getResult()});
+    //     }
+    // }
 }
 
 void MainComponent::sliderValueChanged (juce::Slider *slider)
 {
-    if(slider == &volSlider)
-    {
-        player1.setGain(slider -> getValue());
-    }
-    if(slider == &speedSlider)
-    {
-        player1.setSpeed(slider->getValue());
-    }
-    if(slider == &posSlider)
-    {
-        player1.setPosition(slider->getValue());
-    }
+    // if(slider == &volSlider)
+    // {
+    //     player1.setGain(slider -> getValue());
+    // }
+    // if(slider == &speedSlider)
+    // {
+    //     player1.setSpeed(slider->getValue());
+    // }
+    // if(slider == &posSlider)
+    // {
+    //     player1.setPosition(slider->getValue());
+    // }
 }
