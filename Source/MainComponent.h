@@ -40,5 +40,8 @@ private:
 
     DJAudioPlayer player2;
     DeckGUI deckDUI2{&player2};
+
+   juce::MixerAudioSource mixerSource;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
