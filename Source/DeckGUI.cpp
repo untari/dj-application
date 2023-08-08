@@ -23,6 +23,18 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player) : player(_player)
     addAndMakeVisible(volSlider);
     addAndMakeVisible(speedSlider);
     addAndMakeVisible(posSlider);
+
+    playButton.addListener(this);
+    stopButton.addListener(this);
+    loadButton.addListener(this);
+
+    volSlider.addListener(this);
+    speedSlider.addListener(this);
+    posSlider.addListener(this);
+
+    volSlider.setRange(0.0, 1.0);
+    speedSlider.setRange(0.0, 100.00);
+    posSlider.setRange(0.0, 1.0);
 }
 
 DeckGUI::~DeckGUI()
@@ -62,4 +74,43 @@ void DeckGUI::resized()
   posSlider.setBounds(0,  rowH * 4, getWidth(), rowH);
 
   loadButton.setBounds(0,  rowH * 5, getWidth(), rowH);
+}
+
+void DeckGUI::buttonClicked (juce::Button* button)
+{
+    if(button == &playButton)
+    {
+        std::cout << "button was clicked" << std::endl;
+        player->start(); 
+    }
+    if(button == &stopButton)
+    {
+        std::cout << "stop was clicked" << std::endl;
+        player->stop(); 
+    }
+    if(button == &loadButton)
+    {
+        // to open file browser
+        juce::FileChooser chooser{"select a file.."};
+        if(chooser.browseForFileToOpen())
+        {
+            player->loadURL(juce::URL{chooser.getResult()});
+        }
+    }
+}
+
+void DeckGUI::sliderValueChanged (juce::Slider *slider)
+{
+    if(slider == &volSlider)
+    {
+        player->setGain(slider -> getValue());
+    }
+    if(slider == &speedSlider)
+    {
+        player->setSpeed(slider->getValue());
+    }
+    if(slider == &posSlider)
+    {
+        player->setPosition(slider->getValue());
+    }
 }
