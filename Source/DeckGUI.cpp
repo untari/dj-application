@@ -99,6 +99,7 @@ void DeckGUI::buttonClicked (juce::Button* button)
         if(chooser.browseForFileToOpen())
         {
             player->loadURL(juce::URL{chooser.getResult()});
+            waveformDisplay.loadURL(juce::URL{chooser.getResult()});
         }
     }
 }

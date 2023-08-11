@@ -22,6 +22,8 @@ MainComponent::MainComponent()
 
     addAndMakeVisible(deckDUI1);
     addAndMakeVisible(deckDUI2);
+
+    formatManager.registerBasicFormats();
 }
 
 MainComponent::~MainComponent()

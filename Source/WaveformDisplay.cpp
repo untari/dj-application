@@ -51,3 +51,16 @@ void WaveformDisplay::resized()
     // components that your component contains..
 
 }
+
+void WaveformDisplay::loadURL(juce::URL audioURL)
+{
+  audioThumb.clear();
+  bool loaded = audioThumb.setSource(new juce::URLInputSource(audioURL));
+  if(loaded)
+  {
+    std::cout << "wfd: loadURL" << std::endl;
+  }
+  else{
+     std::cout << "wfd: not loadURL" << std::endl;
+  }
+}
