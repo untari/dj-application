@@ -27,12 +27,16 @@ public:
 private:
     //==============================================================================
     // Your private member variables go here...
-    
+
+    juce::AudioFormatManager formatManager;
+    //it will store up to a 100 cachedwaveforms any one time
+    juce::AudioThumbnailCache thumbCache{100};
+
     DJAudioPlayer player1;
-    DeckGUI deckDUI1{&player1};
+    DeckGUI deckDUI1{&player1, formatManager, thumbCache};
 
     DJAudioPlayer player2;
-    DeckGUI deckDUI2{&player2};
+    DeckGUI deckDUI2{&player2, formatManager, thumbCache};
 
    juce::MixerAudioSource mixerSource;
 
