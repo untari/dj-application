@@ -57,36 +57,6 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
     mixerSource.getNextAudioBlock(bufferToFill);
 }
 
-// void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
-// {
-//     // Your audio-processing code goes here!
-
-//     // For more details, see the help for AudioProcessor::getNextAudioBlock()
-
-//     // Right now we are not producing any data, in which case we need to clear the buffer
-//     // (to prevent the output of random noise)
-
-//     // get access to buffer
-//     auto* leftChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-//     auto* rightChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-    
-//     //fill up with samples using for loop
-//     for(auto i=0; i < bufferToFill.numSamples; ++i)
-//     {
-//         //generate random number
-//         // double sample = rand.nextDouble() * 0.25;
-
-//         double sample = sin(phase) * 0.1;
-//         leftChan[i] = sample;
-//         rightChan[i] = sample;
-
-//         // when generate a sample, increase the phase 
-//         phase += dphase;
-
-//     }
-//     // bufferToFill.clearActiveBufferRegion();
-// }
-
 void MainComponent::releaseResources()
 {
     // This will be called when the audio device stops, or when it is being
@@ -114,44 +84,4 @@ void MainComponent::resized()
     // update their positions.
     deckDUI1.setBounds(0, 0, getWidth()/2, getHeight());
     deckDUI2.setBounds(getWidth()/2, 0, getWidth()/2, getHeight());
-}
-
-
-void MainComponent::buttonClicked (juce::Button* button)
-{
-    // if(button == &playButton)
-    // {
-    //     std::cout << "button was clicked" << std::endl;
-    //     player1.start(); 
-    // }
-    // if(button == &stopButton)
-    // {
-    //     std::cout << "stop was clicked" << std::endl;
-    //     player1.stop(); 
-    // }
-    // if(button == &loadButton)
-    // {
-    //     // to open file browser
-    //     juce::FileChooser chooser{"select a file.."};
-    //     if(chooser.browseForFileToOpen())
-    //     {
-    //         player1.loadURL(juce::URL{chooser.getResult()});
-    //     }
-    // }
-}
-
-void MainComponent::sliderValueChanged (juce::Slider *slider)
-{
-    // if(slider == &volSlider)
-    // {
-    //     player1.setGain(slider -> getValue());
-    // }
-    // if(slider == &speedSlider)
-    // {
-    //     player1.setSpeed(slider->getValue());
-    // }
-    // if(slider == &posSlider)
-    // {
-    //     player1.setPosition(slider->getValue());
-    // }
 }
