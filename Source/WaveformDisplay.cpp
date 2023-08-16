@@ -19,6 +19,7 @@ WaveformDisplay::WaveformDisplay(
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
 
+    audioThumb.addChangeListener(this);
 }
 
 WaveformDisplay::~WaveformDisplay()
@@ -71,8 +72,15 @@ void WaveformDisplay::loadURL(juce::URL audioURL)
   if(fileLoaded)
   {
     std::cout << "wfd: loadURL" << std::endl;
+    repaint();
   }
   else{
      std::cout << "wfd: not loadURL" << std::endl;
   }
+}
+
+void WaveformDisplay::changeListenerCallback(juce::ChangeBroadcaster *source)
+{
+    std::cout << "wfd: change recieved " << std::endl;
+    repaint();
 }

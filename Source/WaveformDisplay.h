@@ -15,7 +15,9 @@
 //==============================================================================
 /*
 */
-class WaveformDisplay  : public juce::Component
+class WaveformDisplay  : public juce::Component,
+                         public juce::ChangeListener
+                         
 {
 public:
     WaveformDisplay(
@@ -27,6 +29,8 @@ public:
     void resized() override;
 
     void loadURL(juce::URL audioURL);
+
+    void changeListenerCallback (juce::ChangeBroadcaster *source) override;
 
 private:
     juce::AudioThumbnail audioThumb;
