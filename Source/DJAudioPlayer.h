@@ -16,7 +16,7 @@ class DJAudioPlayer : public juce::AudioSource
 {
   public: 
     // constructor
-    DJAudioPlayer();
+    DJAudioPlayer(juce::AudioFormatManager& _formatManager);
     ~DJAudioPlayer();
    
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate);
@@ -33,8 +33,9 @@ class DJAudioPlayer : public juce::AudioSource
     void stop();
 
   private: 
-    juce::AudioFormatManager formatManager; 
+    juce::AudioFormatManager& formatManager; 
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
 };
+

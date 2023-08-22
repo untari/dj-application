@@ -32,10 +32,10 @@ private:
     //it will store up to a 100 cachedwaveforms any one time
     juce::AudioThumbnailCache thumbCache{100};
 
-    DJAudioPlayer player1;
+    DJAudioPlayer player1{formatManager};
     DeckGUI deckDUI1{&player1, formatManager, thumbCache};
 
-    DJAudioPlayer player2;
+    DJAudioPlayer player2{formatManager};
     DeckGUI deckDUI2{&player2, formatManager, thumbCache};
 
    juce::MixerAudioSource mixerSource;
