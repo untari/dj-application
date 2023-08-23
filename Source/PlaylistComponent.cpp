@@ -17,9 +17,37 @@ PlaylistComponent::PlaylistComponent()
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
 
+    trackTitles.push_back("Track_1");
+    trackTitles.push_back("Track_2");
+
     tableComponent.getHeader().addColumn("Track title",  0, 400);
     tableComponent.getHeader().addColumn("Artist", 1, 400);
+    tableComponent.setModel(this);
+
     addAndMakeVisible(tableComponent);
+}
+
+int PlaylistComponent::getNumRows()
+{
+  return trackTitles.size();
+}
+
+void PlaylistComponent::paintRowBackground (juce::Graphics &, 
+                      int rowNumber, 
+                      int width, 
+                      int height, 
+                      bool rowIsSelected)
+{
+  
+}
+void PlaylistComponent::paintCell (juce::Graphics &, 
+                      int rowNumber,
+                      int columnId,
+                      int width,
+                      int height,
+                      bool rowIsSelected)
+{
+
 }
 
 PlaylistComponent::~PlaylistComponent()
