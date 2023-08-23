@@ -3,6 +3,8 @@
 #include <JuceHeader.h>
 #include "DJAudioPlayer.h"
 #include "DeckGUI.h"
+#include "PlaylistComponent.h"
+
 //==============================================================================
 /*
     This component lives inside our window, and this is where you should put all
@@ -38,7 +40,9 @@ private:
     DJAudioPlayer player2{formatManager};
     DeckGUI deckDUI2{&player2, formatManager, thumbCache};
 
-   juce::MixerAudioSource mixerSource;
+    juce::MixerAudioSource mixerSource;
+
+    PlaylistComponent playlistComponent;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
