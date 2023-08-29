@@ -35,10 +35,12 @@ class DJAudioPlayer : public juce::AudioSource
     // get the relative position of the playhead
     double getPositionRelative();
 
+    //
+    double getLengthInSeconds();
+
   private: 
     juce::AudioFormatManager& formatManager; 
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
 };
-

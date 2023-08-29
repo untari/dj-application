@@ -10,30 +10,56 @@
 
 #include <JuceHeader.h>
 #include "PlaylistComponent.h"
+#include <vector>
+#include "DJAudioPlayer.h"
+#include <fstream>
+#include "TrackPlaylist.h"
+#include "DeckGUI.h"
+#include <algorithm>
 
 //==============================================================================
-PlaylistComponent::PlaylistComponent()
+PlaylistComponent::PlaylistComponent(DJAudioPlayer* _playerForPlaylist,
+                                     DeckGUI* _deckGUI1,
+                                     DeckGUI* _deckGUI2
+                                     ):playerForPlaylist(_playerForPlaylist),
+                                    deckGUI1(_deckGUI1),
+                                    deckGUI2(_deckGUI2)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
 
-    trackTitles.push_back("Track 1");
-    trackTitles.push_back("Track 2");
-    trackTitles.push_back("Track 3");
-    trackTitles.push_back("Track 4");
-    trackTitles.push_back("Track 5");
-    trackTitles.push_back("Track 6");
-
-    tableComponent.getHeader().addColumn("Track title", 0, 400);
-    tableComponent.getHeader().addColumn("", 1, 200);
-    tableComponent.setModel(this);
-
     addAndMakeVisible(tableComponent);
+    addAndMakeVisible(importButton);
+    addAndMakeVisible(library);
+    addAndMakeVisible(addToPlayer1Button);
+    addAndMakeVisible(addToPlayer2Button);
+    addAndMakeVisible(searchField);
+    
+    importButton.addListener(this);
+    tableComponent.setModel(this);
+    searchField.addListener(this);
+    addToPlayer1Button.addListener(this);
+    addToPlayer2Button.addListener(this);
+  
+    searchField.setTextToShowWhenEmpty("Search title of the music above and click Enter!",juce::Colours::white);
+    
+    searchField.onReturnKey = [this]{searchLibrary (searchField.getText());};
+    
+    library.getHeader().addColumn("Tracks", 1, 1);
+    library.getHeader().addColumn("Length", 2, 1);
+    library.getHeader().addColumn("", 3, 1);
+    library.setModel(this);
+    loadLibrary();
+}
+
+PlaylistComponent::~PlaylistComponent()
+{
+  saveLibrary();
 }
 
 int PlaylistComponent::getNumRows()
 {
-  return trackTitles.size();
+  return tracks.size();
 }
 
 void PlaylistComponent::paintRowBackground (juce::Graphics & g, 
@@ -42,13 +68,13 @@ void PlaylistComponent::paintRowBackground (juce::Graphics & g,
                       int height, 
                       bool rowIsSelected)
 {
-  if(rowIsSelected)
-  {
-    g.fillAll(juce::Colours::orange);
-  }
-  else{
-    g.fillAll(juce::Colours::darkgrey);
-  }
+    if (rowIsSelected)
+    {
+        g.fillAll(juce::Colours::whitesmoke);
+    }
+    else{
+        g.fillAll(juce::Colours::slategrey);
+    }
 }
 void PlaylistComponent::paintCell (juce::Graphics & g, 
                       int rowNumber,
@@ -57,15 +83,26 @@ void PlaylistComponent::paintCell (juce::Graphics & g,
                       int height,
                       bool rowIsSelected)
 {
-  g.drawText(trackTitles[rowNumber], 
-            2, 0, 
-            width - 4, height, 
-            juce::Justification::centredLeft, 
-            true);
-}
-
-PlaylistComponent::~PlaylistComponent()
-{
+  if(rowNumber < getNumRows())
+  {
+      if(columnId==1)
+      {
+          g.drawText(tracks[rowNumber].title,
+                      2, 0,
+                      width-4, height,
+                      juce::Justification::centredLeft,
+                      true
+                      );
+      }
+      if(columnId ==2)
+      {
+        g.drawText(tracks[rowNumber].length,
+                      2, 0, 
+                      width - 4, height,
+                      juce::Justification::centred,
+                      true);
+      }
+  }
 }
 
 void PlaylistComponent::paint (juce::Graphics& g)
@@ -92,27 +129,221 @@ void PlaylistComponent::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..
+
     tableComponent.setBounds(0, 0, getWidth(), getHeight());
+    importButton.setBounds(0, 0, getWidth(), getHeight() / 10);
+    library.setBounds(0, 1 * getHeight() / 10, getWidth(), 13 * getHeight() / 10);
+    searchField.setBounds(0, 13 * getHeight() / 16, getWidth(), 1.5*getHeight() / 16);
+    addToPlayer1Button.setBounds(0, 14 * getHeight() / 16, getWidth() /2 , 2*getHeight() / 16);
+    addToPlayer2Button.setBounds(getWidth() / 2, 14 * getHeight() / 16, getWidth() / 2, 2*getHeight() / 16);
+    //set columns
+    library.getHeader().setColumnWidth(1, 12.8 * getWidth() / 20);
+    library.getHeader().setColumnWidth(2, 5 * getWidth() / 20);
+    library.getHeader().setColumnWidth(3, 2 * getWidth() / 20);
 }
 
-juce::Component*  PlaylistComponent::refreshComponentForCell (int rowNumber,
-                          int columnId,
-                          bool isRowSelected,
-                          Component *existingComponentToUpdate)
+juce::Component* PlaylistComponent::refreshComponentForCell (
+                                    int rowNumber,
+                                    int columnId,
+                                    bool isRowSelected,
+                                    juce::Component *existingComponentToUpdate)
 {
-  if(columnId == 1)
-  {
-    if(existingComponentToUpdate == nullptr)
+    if(columnId ==3)
     {
-      juce::TextButton* btn = new juce::TextButton{"play"};
-      btn -> addListener(this);
-      existingComponentToUpdate = btn;
+        if(existingComponentToUpdate == nullptr)
+        {
+            
+            juce::TextButton*btn = new juce::TextButton{"Delete"};
+            juce::String id{std::to_string(rowNumber)};
+            //text button is a component of the child class
+            btn->setComponentID(id);
+            
+            btn->juce::Button::addListener(this);
+            btn->setColour(juce::TextButton::buttonColourId, juce::Colours::slateblue);
+            
+            existingComponentToUpdate = btn;
+        }
     }
-  }
-  return existingComponentToUpdate;
+    return existingComponentToUpdate;
 }
+
 
 void PlaylistComponent::buttonClicked(juce::Button* button)
 {
-  std::cout << "PlaylistComponent::buttonClicked" << std::endl;
+    if(button ==& importButton)
+    {
+        std::cout << "Load button and clicked " << std::endl;
+        importToLibrary();
+        library.updateContent();
+    }
+    else if (button == & addToPlayer1Button)
+    {
+        std::cout <<"Add to player 1 clicked" << std::endl;
+        loadInPlayer(deckGUI1);
+        
+    }
+    else if(button == & addToPlayer2Button)
+    {
+        std::cout << "add to player 2 clicked" << std::endl;
+        loadInPlayer(deckGUI2);
+    }
+    else {
+        int id = std::stoi(button->getComponentID().toStdString());
+        DBG(tracks[id].title + "removed from library ");
+        deleteFromTracks(id);
+        library.updateContent();
+    }
+}
+
+    
+
+
+void PlaylistComponent::importToLibrary()
+{
+    DBG("PlaylistComponent::importToLibrary called");
+
+    //initialize file chooser
+    juce::FileChooser chooser{ "Select files" };
+    if (chooser.browseForMultipleFilesToOpen())
+    {
+        for (const juce::File& file : chooser.getResults())
+        {
+            juce::String fileNameWithoutExtension{ file.getFileNameWithoutExtension() };
+            if (!isInTracks(fileNameWithoutExtension)) // if not already loaded
+            {
+                TrackPlaylist newTrack{ file };
+                juce::URL audioURL{ file };
+                newTrack.length = getLength(audioURL) ;
+                tracks.push_back(newTrack);
+                DBG("loaded file: " << newTrack.title);
+            }
+            else // display info message
+            {
+                juce::AlertWindow::showMessageBox(juce::AlertWindow::AlertIconType::InfoIcon,
+                    "Load information:",
+                    fileNameWithoutExtension + " already loaded",
+                    "OK",
+                    nullptr
+                );
+            }
+        }
+    }
+}
+
+
+
+juce::String PlaylistComponent::getLength(juce::URL audioURL)
+{
+    playerForPlaylist->loadURL(audioURL);
+    double seconds{playerForPlaylist->getLengthInSeconds() };
+    juce::String minutes{secondsToMinutes(seconds)} ;
+    return minutes;
+}
+
+juce::String PlaylistComponent::secondsToMinutes(double seconds)
+{
+    int secondsRounded{ int (std::round(seconds))} ;
+    juce::String min{ std::to_string(secondsRounded /60 )};
+    juce::String sec{std::to_string(secondsRounded %60)};
+    
+    if(sec.length() < 2)
+    {
+        sec = sec.paddedLeft('0', 2);
+    }
+    return juce::String{ min + ":" + sec } ;
+}
+
+
+bool PlaylistComponent::isInTracks(juce::String fileNameWithoutExtension)
+{
+    return(std::find(tracks.begin(),tracks.end(),
+                     fileNameWithoutExtension) != tracks.end());
+}
+
+
+
+void PlaylistComponent::saveLibrary()
+{
+    std::ofstream myLibrary("My-library.csv");
+    
+    for(TrackPlaylist& t: tracks)
+    {
+        myLibrary <<t.file.getFullPathName()<< "," <<t.length<< "\n";
+    }
+}
+
+
+void PlaylistComponent::loadLibrary()
+{
+    std::ifstream myLibrary("My-library.csv");
+    std::string filePath;
+    std::string length;
+    
+    if( myLibrary.is_open())
+    {
+        while(getline(myLibrary, filePath, ',')) {
+            juce::File file{ filePath };
+            TrackPlaylist newTrack{ file };
+            
+            getline(myLibrary, length);
+            newTrack.length = length;
+            tracks.push_back(newTrack);
+        }
+    }
+    myLibrary.close();
+}
+
+
+
+void PlaylistComponent::deleteFromTracks(int id)
+{
+    tracks.erase(tracks.begin() + id);
+}
+
+
+int PlaylistComponent::whereInTracks(juce::String searchText)
+{
+    auto it= find_if(tracks.begin(), tracks.end(),
+                     [&searchText](const TrackPlaylist& obj) {return obj.title.contains(searchText);});
+    int i=-1;
+    
+    if( it != tracks.end())
+    {
+        i = std::distance(tracks.begin(), it);
+    }
+                         return  i;
+}
+
+
+
+void PlaylistComponent::loadInPlayer(DeckGUI* deckGUI)
+{
+    int selectedRow{ library.getSelectedRow() };
+    if ( selectedRow != -1)
+    {
+        DBG("Adding: " <<tracks[selectedRow].title<<" to player ");
+        deckGUI->loadFile(tracks[selectedRow].URL);
+    }
+    else
+    {
+        juce::AlertWindow::showMessageBox(juce::AlertWindow::AlertIconType::InfoIcon,
+                                          "Add to deck information",
+                                          "Please selecte a track to add to deck ",
+                                          "Ok",
+                                          nullptr
+);
+    }
+}
+
+void PlaylistComponent::searchLibrary(juce::String searchText){
+    DBG("search library for the track :" <<searchText);
+    if ( searchText !="")
+    {
+        int rowNumber = whereInTracks(searchText);
+        library.selectRow(rowNumber);
+    }
+    else
+    {
+        library.deselectAllRows();
+    }
 }

@@ -21,7 +21,8 @@ class DeckGUI  : public juce::Component,
                  public juce::Button::Listener,
                  public juce::Slider::Listener,
                  public juce::FileDragAndDropTarget,
-                 public juce::Timer
+                 public juce::Timer,
+                 public juce::LookAndFeel_V4
 {
 public:
     DeckGUI(DJAudioPlayer* player,
@@ -42,9 +43,17 @@ public:
     void filesDropped(const juce::StringArray &files, int x, int y) override;
 
     void timerCallback() override;
+    void drawRotarySlider (juce::Graphics& g, int x, int y, int width, int height, float sliderPos,
+                            const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider&) override;
+
 private:
 
+    int id;
+    
+    juce::LookAndFeel_V4 otherLookAndFeel;
     juce::TextButton playButton{"PLAY"};
+    // add loop button
+    juce::ToggleButton loopButton{"LOOP"};
     juce::TextButton stopButton{"STOP"};
     juce::TextButton loadButton{"LOAD"};
     
@@ -52,10 +61,17 @@ private:
     juce::Slider speedSlider;
     juce::Slider posSlider;
 
+    juce::Label speedSliderLabel;
+    juce::Label volSliderLabel;
+    juce::Label posSliderLabel;
+
     DJAudioPlayer* player;
 
     WaveformDisplay waveformDisplay;
-
+    
+    void loadFile(juce::URL audioURL);
+    
+    friend class PlaylistComponent;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)
 };
