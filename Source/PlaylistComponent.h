@@ -25,7 +25,7 @@ class PlaylistComponent  : public juce::Component,
                            public juce::Button::Listener,
                            public juce::TextEditor::Listener
 {
-public:
+  public:
     PlaylistComponent(DJAudioPlayer* _playerForPlaylist,
                       DeckGUI* _deckGUI1,
                       DeckGUI* _deckGUI2);
@@ -49,7 +49,7 @@ public:
                           int width,
                           int height,
                           bool rowIsSelected) override;
-  
+
     juce::Component* refreshComponentForCell (
                                       int rowNumber,
                                       int columnID,
@@ -58,15 +58,15 @@ public:
 
     void buttonClicked(juce::Button* button) override;
 
-    std::unique_ptr<juce::XmlElement> tutorialData;
+    std::unique_ptr<juce::XmlElement> sampleData;
     juce::XmlElement* columnList = nullptr;
     juce::XmlElement* dataList = nullptr;
     int numRows = 0;
-private:
+  private:
 
     std::vector<TrackPlaylist> tracks;
     juce::TableListBox library;
-    juce::TextEditor searchField;
+    juce::TextEditor searchBox;
 
     juce::TableListBox tableComponent;
     std::vector<std::string> trackTitles;
@@ -76,8 +76,8 @@ private:
     DeckGUI* deckGUI1;
     DeckGUI* deckGUI2;
     
-    juce::TextButton addToPlayer1Button {"Add to deck 1"};
-    juce::TextButton addToPlayer2Button {"Add to deck 2"};
+    juce::TextButton addToPlayer1 {"Add to left deck"};
+    juce::TextButton addToPlayer2 {"Add to right deck"};
     juce::TextButton importButton{"Import Tracks"};
 
     void importToLibrary();
@@ -88,9 +88,9 @@ private:
     juce::String getLength(juce::URL audioURL);
     juce::String secondsToMinutes(double seconds);
     
-    bool isInTracks(juce::String fileNameWithoutExtension);
+    bool isInTheTracks(juce::String fileNameWithoutExtension);
     
-    int whereInTracks(juce::String searchText);
+    int whereInTheTracks(juce::String searchText);
     
     void loadInPlayer(DeckGUI* deckGUI);
     

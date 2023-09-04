@@ -132,14 +132,14 @@ void DeckGUI::resized()
     waveformDisplay.setBounds(0, rowH*5, getWidth(), rowH*3);
     posSlider.setBounds(rowH*2,rowH*4, getWidth(), rowH);
 
-    auto border = 4;
+    auto borderDeck = 4;
 
-    auto area = getLocalBounds();
+    auto deckArea = getLocalBounds();
 
-    auto dialArea = area.removeFromTop (area.getHeight() / 3);
+    auto dialArea = deckArea.removeFromTop (deckArea.getHeight() / 3);
 
-    volSlider.setBounds (dialArea.removeFromLeft (dialArea.getWidth() / 2).reduced (border));
-    speedSlider.setBounds (dialArea.reduced (border));
+    volSlider.setBounds (dialArea.removeFromLeft (dialArea.getWidth() / 2).reduced (borderDeck));
+    speedSlider.setBounds (dialArea.reduced (borderDeck));
 
     // position for the labels
     volSliderLabel.setCentreRelative(0.42f, 0.15f);
@@ -235,31 +235,30 @@ void DeckGUI::drawRotarySlider (juce::Graphics& g, int x, int y, int width, int 
                                 const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider&)
 
 {
- 
     auto radius = (float) juce::jmin (width / 2, height / 2) - 4.0f;
     auto centreX = (float) x + (float) width  * 0.5f;
     auto centreY = (float) y + (float) height * 0.1f;
-    auto rx = centreX - radius;
-    auto ry = centreY - radius;
-    auto rw = radius * 2.0f;
-    auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
+    auto radiusX = centreX - radius;
+    auto radiusY = centreY - radius;
+    auto radiusWidth = radius * 2.0f;
+    auto rotaryAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
     // fill
     g.setColour (juce::Colours::orange);
-    g.fillEllipse (rx, ry, rw, rw);
+    g.fillEllipse (radiusX, radiusY, radiusWidth, radiusWidth);
 
     // outline
     g.setColour (juce::Colours::red);
-    g.drawEllipse (rx, ry, rw, rw, 1.0f);
+    g.drawEllipse (radiusX, radiusY, radiusWidth, radiusWidth, 1.0f);
     
-    juce::Path p;
-    auto pointerLength = radius * 0.33f;
+    juce::Path pointer;
+    auto lengthOfPointer = radius * 0.33f;
     auto pointerThickness = 2.0f;
-    p.addRectangle (-pointerThickness * 0.5f, -radius, pointerThickness, pointerLength);
-    p.applyTransform (juce::AffineTransform::rotation (angle).translated (centreX, centreY));
+    pointer.addRectangle (-pointerThickness * 0.5f, -radius, pointerThickness, lengthOfPointer);
+    pointer.applyTransform (juce::AffineTransform::rotation (rotaryAngle).translated (centreX, centreY));
 
     // pointer
     g.setColour (juce::Colours::yellow);
-    g.fillPath (p);
+    g.fillPath (pointer);
 }
 
 void DeckGUI::loadFile(juce::URL audioURL)

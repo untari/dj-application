@@ -22,7 +22,6 @@ MainComponent::MainComponent()
 
     addAndMakeVisible(deckGUI1);
     addAndMakeVisible(deckGUI2);
-    
     addAndMakeVisible(playlistComponent);
 
     formatManager.registerBasicFormats();
@@ -50,9 +49,6 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     mixerSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
     mixerSource.addInputSource(&player1, false);
     mixerSource.addInputSource(&player2, false);
-
-
-
 }
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {

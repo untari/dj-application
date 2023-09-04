@@ -35,7 +35,7 @@ void DJAudioPlayer::releaseResources()
   resampleSource.releaseResources();
 }
 
-// function that allow us to control it
+// Function that allow us to control it.
 void DJAudioPlayer::loadURL(juce::URL audioURL)
 {
   auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
@@ -47,7 +47,7 @@ void DJAudioPlayer::loadURL(juce::URL audioURL)
       readerSource.reset(newSource.release());         
   }
 }
-// tell the transportsource
+// Tell the transportsource.
 void DJAudioPlayer::setGain(double gain)
 {
   if(gain < 0 || gain > 1.0)
@@ -98,7 +98,7 @@ double DJAudioPlayer::getPositionRelative()
   return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
 }
 
-//
+// Function returns the length of the audio file in seconds.
 double DJAudioPlayer::getLengthInSeconds()
 {
     return transportSource.getLengthInSeconds();
