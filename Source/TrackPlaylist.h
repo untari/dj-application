@@ -12,16 +12,16 @@
 
 #include <JuceHeader.h>
 
-//==============================================================================
-/*
-*/
 class TrackPlaylist
 {
   public:
-      TrackPlaylist(juce::File _file);
-        juce::File file;
-        juce::URL URL;
-        juce::String title;
-        juce::String length;
-        bool operator==(const juce::String& other)const;
+    TrackPlaylist(juce::File _file);
+    // Variable stores the file for the track.
+    juce::File file;
+    // Stores the URL, title and length.
+    juce::URL URL;
+    juce::String title;
+    juce::String length;
+    // Compare two TrackPlaylist objects.
+    bool operator==(const juce::String& other)const;
 };
